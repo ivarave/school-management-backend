@@ -14,6 +14,8 @@ class Command(BaseCommand):
             self.stdout.write("⚠️ Missing superuser credentials in env")
             return
 
+        self.stdout.write(f"🔍 Attempting to set password for {username}")
+
         try:
             user = User.objects.get(username=username)
             user.set_password(password)
