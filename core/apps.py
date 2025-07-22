@@ -6,11 +6,11 @@ class CoreConfig(AppConfig):
     default_auto_field = 'django.db.models.BigAutoField'
     name = 'core'
 
-    def ready(self):
-        # Optional: if you still use signals
-        import core.signals
+    # def ready(self):
+    #     # Optional: if you still use signals
+    #     import core.signals
 
-        self.create_superuser_on_startup()
+    #     self.create_superuser_on_startup()
 
     def create_superuser_on_startup(self):
         from django.db.utils import OperationalError
