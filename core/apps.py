@@ -2,19 +2,14 @@ from django.apps import AppConfig
 from django.contrib.auth import get_user_model
 import os
 
-
 class CoreConfig(AppConfig):
     default_auto_field = 'django.db.models.BigAutoField'
     name = 'core'
-    
-    def ready(self):
-        import core.signals
-        
-class SchoolConfig(AppConfig):
-    default_auto_field = 'django.db.models.BigAutoField'
-    name = 'core'
 
     def ready(self):
+        # Optional: if you still use signals
+        import core.signals
+
         self.create_superuser_on_startup()
 
     def create_superuser_on_startup(self):
