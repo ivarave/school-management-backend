@@ -9,7 +9,7 @@ CSRF_TRUSTED_ORIGINS = [f'https://{os.environ.get("RENDER_EXTERNAL_HOSTNAME")}']
 
 DEBUG = False
 
-SECRET_KEY = os.environ.get['SECRET_KEY']
+SECRET_KEY = os.environ.get('SECRET_KEY')
 
 MIDDLEWARE = [
     'corsheaders.middleware.CorsMiddleware',
