@@ -12,7 +12,7 @@ class CoreConfig(AppConfig):
         
 class SchoolConfig(AppConfig):
     default_auto_field = 'django.db.models.BigAutoField'
-    name = 'school'
+    name = 'core'
 
     def ready(self):
         self.create_superuser_on_startup()
