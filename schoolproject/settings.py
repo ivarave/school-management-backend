@@ -15,7 +15,7 @@ SECRET_KEY = 'django-insecure-qzd^6tp8y-ahct(t%0olst)lz+vrk0zqpj&nvmu^6dk7bpsc5b
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = True
 
-ALLOWED_HOSTS = []
+ALLOWED_HOSTS = ['school-management-backend-ftec.onrender.com', 'localhost', '127.0.0.1']
 
 DEFAULT_FROM_EMAIL = 'eivarave404@gmail.com'
 

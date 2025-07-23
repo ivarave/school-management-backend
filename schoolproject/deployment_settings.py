@@ -5,7 +5,7 @@ from schoolproject.settings import BASE_DIR
 
 print("✅ deployment_settings.py is being used1")
 
-ALLOWED_HOSTS = ['school-management-backend-ftec.onrender.com']
+ALLOWED_HOSTS = ['school-management-backend-ftec.onrender.com', 'localhost', '127.0.0.1']
 
 CSRF_TRUSTED_ORIGINS = ['https://school-management-backend-ftec.onrender.com']
 
