@@ -3,6 +3,8 @@ import dj_database_url
 from schoolproject.settings import *
 from schoolproject.settings import BASE_DIR
 
+print("✅ deployment_settings.py is being used1")
+
 ALLOWED_HOSTS = ['school-management-backend-ftec.onrender.com']
 
 CSRF_TRUSTED_ORIGINS = ['https://school-management-backend-ftec.onrender.com']
@@ -25,7 +27,7 @@ MIDDLEWARE = [
 ]
 
 CORS_ALLOWED_ORIGINS = [
-    'https://localhost:3000',
+    'http://localhost:3000',
     'https://school-management-frontend-5x70.onrender.com'
 ]
 
@@ -50,3 +52,5 @@ DATABASES = {
 RENDER_EXTERNAL_HOSTNAME = os.environ.get("RENDER_EXTERNAL_HOSTNAME")
 if RENDER_EXTERNAL_HOSTNAME:
     ALLOWED_HOSTS.append(RENDER_EXTERNAL_HOSTNAME)
+
+print("✅ deployment_settings.py is being used2")
