@@ -3,9 +3,9 @@ import dj_database_url
 from schoolproject.settings import *
 from schoolproject.settings import BASE_DIR
 
-ALLOWED_HOSTS = [os.environ.get('RENDER_EXTERNAL_HOSTNAME')]
+ALLOWED_HOSTS = ['school-management-backend-ftec.onrender.com']
 
-CSRF_TRUSTED_ORIGINS = [f'https://{os.environ.get("RENDER_EXTERNAL_HOSTNAME")}']
+CSRF_TRUSTED_ORIGINS = ['https://school-management-backend-ftec.onrender.com']
 
 DEBUG = False
 
