@@ -2,11 +2,14 @@
 """Django's command-line utility for administrative tasks."""
 import os
 import sys
+from dotenv import load_dotenv
+
+load_dotenv()
 
 
 def main():
     """Run administrative tasks."""
-    settings_module = 'schoolproject.deployment_settings' if 'RENDER_EXTERNAL_HOSTNAME' in os.environ else 'schoolproject.settings'
+    settings_module = 'schoolproject.deployment_settings' if os.getenv("DJANGO_ENV") == "production" else 'schoolproject.settings'
     os.environ['DJANGO_SETTINGS_MODULE'] = settings_module
     try:
         from django.core.management import execute_from_command_line
