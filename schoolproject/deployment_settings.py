@@ -25,7 +25,8 @@ MIDDLEWARE = [
 ]
 
 CORS_ALLOWED_ORIGINS = [
-    'https://school-management-backend-ftec.onrender.com',
+    'https://localhost:3000',
+    'https://school-management-frontend-5x70.onrender.com/'
 ]
 
 
