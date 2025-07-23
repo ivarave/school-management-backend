@@ -102,17 +102,15 @@ class CustomTokenObtainPairView(TokenObtainPairView):
 class StudentViewSet(viewsets.ModelViewSet):
     queryset = CustomUser.objects.filter(role='student')
     serializer_class = StudentSerializer
+    permission_classes = [IsTeacher | IsStudentReadOnly | IsModerator]
 
-    def get_permissions(self):
-        if self.request.method in permissions.SAFE_METHODS:
-            return [permissions.IsAuthenticated()]
-        return [permissions.IsAdminUser()]
+
 
 
 class TeacherViewSet(viewsets.ModelViewSet):
     queryset = Teacher.objects.all()
     serializer_class = TeacherSerializer
-    permission_classes = [permissions.IsAdminUser, IsTeacher | IsStudentReadOnly]   
+    permission_classes = [IsTeacher | IsStudentReadOnly | IsModerator]
     
 class ModeratorViewSet(viewsets.ModelViewSet):
     queryset = CustomUser.objects.all()
@@ -123,34 +121,34 @@ class ModeratorViewSet(viewsets.ModelViewSet):
 class SubjectViewSet(viewsets.ModelViewSet):
     queryset = Subject.objects.all()
     serializer_class = SubjectSerializer
-    permission_classes = [permissions.IsAdminUser, IsTeacher | IsStudentReadOnly]
+    permission_classes = [IsTeacher | IsStudentReadOnly | IsModerator]
 
 
 class GradeViewSet(viewsets.ModelViewSet):
     queryset = Grade.objects.all()
     serializer_class = GradeSerializer
-    permission_classes = [permissions.IsAdminUser, IsTeacher]
+    permission_classes = [IsTeacher | IsStudentReadOnly | IsModerator]
 
 
 class ClassRoomViewSet(viewsets.ModelViewSet):
     queryset = ClassRoom.objects.all()
     serializer_class = ClassRoomSerializer
-    permission_classes = [permissions.IsAdminUser, IsTeacher | IsStudentReadOnly]
+    permission_classes = [IsTeacher | IsStudentReadOnly | IsModerator]
 
 
 class TimetableViewSet(viewsets.ModelViewSet):
     queryset = Timetable.objects.all()
     serializer_class = TimetableSerializer
-    permission_classes = [permissions.IsAdminUser, IsTeacher | IsStudentReadOnly]
+    permission_classes = [IsTeacher | IsStudentReadOnly | IsModerator]
 
 
 class AttendanceViewSet(viewsets.ModelViewSet):
     queryset = Attendance.objects.all()
     serializer_class = AttendanceSerializer
-    permission_classes = [permissions.IsAdminUser, IsTeacher | IsStudentReadOnly]
+    permission_classes = [IsTeacher | IsStudentReadOnly | IsModerator]
 
 
 class ClassAttendanceViewSet(viewsets.ModelViewSet):
     queryset = classAttendance.objects.all()
     serializer_class = ClassAttendanceSerializer
-    permission_classes = [permissions.IsAdminUser, IsTeacher | IsStudentReadOnly]
+    permission_classes = [IsTeacher | IsStudentReadOnly | IsModerator]
