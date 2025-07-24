@@ -151,11 +151,15 @@ STATIC_ROOT = BASE_DIR / 'staticfiles'
 DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
 
 CORS_ALLOWED_ORIGINS = [
-    "http://localhost:3000",  # React frontend in dev
+    "http://127.0.0.1:5173",
+    "http://localhost:5173",
 ]
 
 CSRF_TRUSTED_ORIGINS = [
-    "http://localhost:3000",
+    "http://127.0.0.1:5173",
+    "http://localhost:5173",
 ]   
 
 AUTH_USER_MODEL = 'core.CustomUser'
+
+CSRF_ALLOW_CREDENTIALS = True
