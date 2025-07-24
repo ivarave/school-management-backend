@@ -9,13 +9,26 @@ from django.conf import settings
 User = get_user_model()
 
 class TeacherInfoSerializer(serializers.ModelSerializer):
+    # Include related user fields
+    first_name = serializers.CharField(source='user.first_name', read_only=True)
+    last_name = serializers.CharField(source='user.last_name', read_only=True)
     username = serializers.CharField(source='user.username', read_only=True)
     email = serializers.EmailField(source='user.email', read_only=True)
-    
+    role = serializers.CharField(source='user.role', read_only=True)
+
     class Meta:
         model = Teacher
-        fields = ['id', 'teacher_id', 'username', 'email']
-
+        fields = [
+            'id',
+            'teacher_id',
+            'first_name',
+            'last_name',
+            'username',
+            'email',
+            'role',
+            'name',      # model-specific field
+            'age',       # model-specific field
+        ]
 
 class CustomUserSerializer(serializers.ModelSerializer):
     class Meta:
@@ -41,26 +54,39 @@ class CustomUserSerializer(serializers.ModelSerializer):
             instance.set_password(password)
         instance.save()
         return instance
-        
-class StudentSerializer(serializers.ModelSerializer):
 
+class StudentSerializer(serializers.ModelSerializer):
     class Meta:
         model = CustomUser
         fields = ['id', 'first_name', 'last_name', 'username', 'email', 'role']
-        
+
 class TeacherSerializer(serializers.ModelSerializer):
+    # Include related user fields
+    first_name = serializers.CharField(source='user.first_name', read_only=True)
+    last_name = serializers.CharField(source='user.last_name', read_only=True)
+    username = serializers.CharField(source='user.username', read_only=True)
+    email = serializers.EmailField(source='user.email', read_only=True)
+    role = serializers.CharField(source='user.role', read_only=True)
 
     class Meta:
         model = Teacher
-        fields = '__all__'
-        
-class SubjectSerializer(serializers.ModelSerializer):
+        fields = [
+            'id',
+            'teacher_id',
+            'first_name',
+            'last_name',
+            'username',
+            'email',
+            'role',
+            'name',
+            'age',
+        ]
 
+class SubjectSerializer(serializers.ModelSerializer):
     class Meta:
         model = Subject
         fields = '__all__'
-        
-        
+
 class GradeSerializer(serializers.ModelSerializer):
     class Meta:
         model = Grade
@@ -85,9 +111,6 @@ class ClassAttendanceSerializer(serializers.ModelSerializer):
     class Meta:
         model = classAttendance
         fields = '__all__'
-        
-
-
 
 class RegisterSerializer(serializers.ModelSerializer):
     class Meta:
@@ -134,12 +157,12 @@ class RegisterSerializer(serializers.ModelSerializer):
             is_approved=is_approved
         )
 
+        # Save personal info
         user.first_name = first_name
         user.last_name = last_name
         user.save()
 
         if role == 'student':
-            from core.models import Student
             Student.objects.get_or_create(
                 user=user,
                 defaults={
@@ -149,12 +172,11 @@ class RegisterSerializer(serializers.ModelSerializer):
                 }
             )
         elif role == 'teacher':
-            from core.models import Teacher
             Teacher.objects.get_or_create(
                 user=user,
                 defaults={
                     'name': raw_username,
-                    'subject': '',
+                    'age': 0,
                     'email': email,
                     'teacher_id': final_username
                 }
@@ -171,13 +193,10 @@ class RegisterSerializer(serializers.ModelSerializer):
 
         return user
 
-
-
     def to_representation(self, instance):
         rep = super().to_representation(instance)
         rep['final_username'] = instance.username
         return rep
-
 
 class CustomTokenObtainPairSerializer(TokenObtainPairSerializer):
     def validate(self, attrs):
@@ -195,8 +214,6 @@ class CustomTokenObtainPairSerializer(TokenObtainPairSerializer):
                 raise serializers.ValidationError({'detail': 'Moderator must log in with MOD/ prefix'})
             if not user.is_approved:
                 raise serializers.ValidationError({'detail': 'Moderator account is pending approval'})
-
-        
 
         data['role'] = user.role
         data['username'] = user.username

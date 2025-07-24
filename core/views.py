@@ -18,39 +18,55 @@ User = get_user_model()
 @permission_classes([IsAuthenticated])
 def student_info(request):
     user = request.user
-    if user.role != 'student' or 'moderator':
+    if user.role not in[ 'student', 'moderator']:
         return Response({'error': 'Not authorized'}, status=403)
-    try:
-        student = Student.objects.get(user=request.user)
+    if user.role == 'student':
+        try:
+            student = Student.objects.get(user=request.user)
+            return Response({
+                'id': student.id,
+                'name': student.name,
+                'age': student.age,
+                'student_id': student.student_id,
+                'email': request.user.email,
+                'username': request.user.username,
+                'role': request.user.role,
+            })
+        except Student.DoesNotExist:
+            return Response({'error': 'Student profile not found'}, status=404)
+    elif user.role == 'moderator':
         return Response({
-            'id': student.id,
-            'name': student.name,
-            'age': student.age,
-            'student_id': student.student_id,
-            'email': request.user.email,
-            'username': request.user.username,
-            'role': request.user.role,
+            'username': user.username,
+            'email': user.email,
+            'role': user.role,
         })
-    except Student.DoesNotExist:
-        return Response({'error': 'Student profile not found'}, status=404)
     
 @api_view(['GET'])
 @permission_classes([IsAuthenticated])
 def teacher_info(request):
     user = request.user
-    if user.role != 'teacher' or 'moderator':
+    if user.role not in ['teacher','moderator']:
         return Response({'error': 'Not authorized'}, status=403)
 
-    try:
-        teacher = Teacher.objects.get(user=user)
+    if user.role == 'teacher':
+        try:
+            teacher = Teacher.objects.get(user=user)
+            data = {
+                "username": teacher.user.username,
+                "email": teacher.user.email,
+                "id": teacher.teacher_id,
+            }
+            return Response(data)
+        except Teacher.DoesNotExist:
+            return Response({"error": "Teacher not found"}, status=404)
+        
+    elif user.role == 'moderator':
         data = {
-            "username": teacher.user.username,
-            "email": teacher.user.email,
-            "teacher_id": teacher.teacher_id,
+            "username": user.username,
+            "email": user.email,
+            "role": user.role,
         }
         return Response(data)
-    except Teacher.DoesNotExist:
-        return Response({"error": "Teacher not found"}, status=404)
 
 
 
