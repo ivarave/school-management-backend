@@ -24,13 +24,9 @@ class SubjectViewSet(viewsets.ModelViewSet):
         if user.role == "moderator":
             return Subject.objects.all()
         elif user.role == "teacher":
-            try:
-                teacher = Teacher.objects.get(user=user)
-            except Teacher.DoesNotExist:
-                raise NotFound("Teacher profile not found for this user")
-            return Subject.objects.filter(teacher=teacher)
+            return Subject.objects.filter(teacher=user)
         elif user.role == "student":
-            return Subject.objects.filter(students=user)
+            return Subject.objects.all()
         return Subject.objects.none()
 
     @action(detail=False, methods=["get"], permission_classes=[IsAuthenticated])
@@ -41,17 +37,12 @@ class SubjectViewSet(viewsets.ModelViewSet):
         user = self.request.user
 
         if user.role == "teacher":
-            try:
-                teacher = Teacher.objects.get(user=user)
-            except Teacher.DoesNotExist:
-                raise NotFound("Teacher profile not found for this user")
-            serializer.save(teacher=teacher)
-
+            serializer.save(teacher=user)  # user is CustomUser
         elif user.role == "moderator":
             serializer.save()
-
         else:
-            return PermissionDenied("You do not have permission to create a subject.")
+            raise PermissionDenied("You do not have permission to create a subject.")
+
 
     def perform_update(self, serializer):
         user = self.request.user
@@ -60,18 +51,12 @@ class SubjectViewSet(viewsets.ModelViewSet):
         if user.role == "moderator":
             serializer.save()
         elif user.role == "teacher":
-            try:
-                teacher = Teacher.objects.get(user=user)
-            except Teacher.DoesNotExist:
-                raise NotFound("Teacher profile not found for this user")
-            if subject.teacher == teacher:
+            if subject.teacher == user:  # compare CustomUser
                 serializer.save()
             else:
                 raise PermissionDenied("You do not have permission to edit this subject.")
         else:
             raise PermissionDenied("You do not have permission to edit this subject.")
-
-
 
 
     def perform_destroy(self, instance):
@@ -81,9 +66,9 @@ class SubjectViewSet(viewsets.ModelViewSet):
             user.role == "teacher" and instance.teacher == user
         ):
             instance.delete()
-
         else:
             raise PermissionDenied("You do not have permission to delete this subject.")
+
 
     @action(detail=True, methods=["post"], permission_classes=[IsAuthenticated])
     def enroll(self, request, pk=None):
